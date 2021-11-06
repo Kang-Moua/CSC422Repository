@@ -1,7 +1,6 @@
 //Kang Moua
 //CSC 422 Section 100
 //Assignment 1
-
 package com.assignment1;
 
 import java.util.Scanner;
@@ -19,8 +18,6 @@ public class PetDatabase {
         String[] inputArray = new String[1];
         //counter to display number of pets added
         int counter = 0;
-        //boolean to end while loop for switch case 2
-        boolean end = false;
 
         //initate pet table class
         PetTable pt = new PetTable();
@@ -49,11 +46,10 @@ public class PetDatabase {
                     pt.table();
                     break;
                 case 2: //prompt user to add pet name and age
-                    while (end == false) {
+                    while (true) {
                         System.out.println("add pet (name, age): ");
                         petInput = input.nextLine();
                         if (petInput == "done") {
-                            end = true;
                             break;
                         } else {
                             for (int i = 0; i < 1; i++) {
@@ -63,7 +59,8 @@ public class PetDatabase {
                                 pt.addPetAge(Integer.parseInt(inputArray[1]));
                                 pt.addPetName(inputArray[0]);
                                 pt.addPetId();
-                            } catch (ArrayIndexOutOfBoundsException e) {
+                            } catch (Exception e) {
+                                System.out.println("");
                                 break;
                             }
                             counter++;
@@ -71,6 +68,26 @@ public class PetDatabase {
                     }
                     System.out.println(counter + " pets added.\n");
                     counter = 0;
+                    break;
+                case 5: //search by name
+                    System.out.println("Enter a name to search: ");
+                    petInput = input.nextLine();
+                    try {
+                        pt.nameSearch(petInput);
+                    } catch (Exception e) {
+                        System.out.println("");
+                        break;
+                    }
+                    break;
+                case 6: //search by age
+                    System.out.println("Enter an age to search: ");
+                    petInput = input.nextLine();
+                    try {
+                        pt.ageSearch(Integer.parseInt(petInput));
+                    } catch (Exception e) {
+                        System.out.println("");
+                        break;
+                    }
                     break;
                 case 7: //ends program
                     System.out.println("Goodbye!");
