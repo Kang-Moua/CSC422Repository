@@ -4,6 +4,8 @@
 
 package com.assignment1;
 
+import java.util.Scanner;
+
 public class PetDatabase {
 
     public static void main(String[] args) throws Exception {
