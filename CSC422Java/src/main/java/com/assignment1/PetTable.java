@@ -9,6 +9,10 @@ public class PetTable {
     private ArrayList<String> name = new ArrayList<>();
     private ArrayList<Integer> age = new ArrayList<>();
 
+    //to print previous name and age
+    String previousName = new String();
+    int previousAge = 0;
+
     //no-args default constructor
     public PetTable() {
     }
@@ -51,9 +55,13 @@ public class PetTable {
     //search for name of pet in array list
     public void nameSearch(String petName) {
         int counter = 0;
+        String petNameCap = new String();
         System.out.printf("\n+----------------------+\n");
         System.out.printf("%-3s %-10s %4s", "ID", "NAME", "AGE\n");
         System.out.println("+----------------------+");
+        
+        petNameCap = petName.substring(0, 1).toUpperCase();
+        petNameCap = petNameCap+petName.substring(1);
 
         if (name.contains(petName)) {
             for (int i = 0; i < id.size(); i++) {
@@ -62,6 +70,14 @@ public class PetTable {
                     counter++;
                 }
             }
+            if (name.contains(petNameCap)) {
+            for (int i = 0; i < id.size(); i++) {
+                if (name.get(i).equals(petNameCap)) {
+                    System.out.printf("%-3s %-10s %4s", id.get(i), name.get(i), age.get(i) + "\n");
+                    counter++;
+                }
+            }
+        }
         } else {
             System.out.print("\n");
         }
@@ -92,4 +108,17 @@ public class PetTable {
         System.out.println(counter + " row(s) in set.\n");
     }
 
+    public void updatePet(int petId, String petName, int petAge) {
+        previousName = name.get(petId);
+        previousAge = age.get(petId);
+        name.set(petId, petName);
+        age.set(petId, petAge);
+        System.out.println(previousName + " " + previousAge + " changed to " + name.get(petId) + " " + age.get(petId) + ".\n");
+    }
+
+    public void deletePet(int petId) {
+        id.remove(petId);
+        name.remove(petId);
+        age.remove(petId);
+    }
 }
