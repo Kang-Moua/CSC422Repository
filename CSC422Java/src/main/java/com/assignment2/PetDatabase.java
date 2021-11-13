@@ -22,6 +22,8 @@ public class PetDatabase {
         int counter = 0;
         //check if choice input is valid
         boolean number = false;
+        // check if pet input valid for name and age
+        boolean full = false;
 
         //initiate pet table class
         PetTable pt = new PetTable();
@@ -80,12 +82,21 @@ public class PetDatabase {
                                 inputArray = petInput.split(" ");
                             }
                             try {
-                                pt.addPetAge(Integer.parseInt(inputArray[1]));
-                                pt.addPetName(inputArray[0]);
-                                pt.addPetId();
-                                counter++;
+                                if (Integer.parseInt(inputArray[1]) > 20 || Integer.parseInt(inputArray[1]) < 0) {
+                                    System.out.println("Error: " + Integer.parseInt(inputArray[1]) + " is not a valid input.");
+                                } else {
+                                    if (pt.limitCheck(full)) {
+                                        System.out.println("Error: Database is full.");
+                                        break;
+                                    } else {
+                                        pt.addPetAge(Integer.parseInt(inputArray[1]));
+                                        pt.addPetName(inputArray[0]);
+                                        pt.addPetId();
+                                        counter++;
+                                    }
+                                }
                             } catch (Exception e) {
-                                System.out.println("");
+                                System.out.println("Error: " + petInput + " is not a valid input.");
                             }
                         }
                     }
@@ -99,7 +110,7 @@ public class PetDatabase {
                         petIdInput = input.nextInt();
                         pt.deletePet(petIdInput);
                     } catch (Exception e) {
-                        System.out.println("");
+                        System.out.println("Error: ID " + petIdInput + " does not exist.\n");
                         break;
                     }
                     break;
@@ -115,7 +126,7 @@ public class PetDatabase {
         pf.id = pt.getArrayId();
         pf.name = pt.getArrayName();
         pf.age = pt.getArrayAge();
-
+        
         //saves array lists in text file
         try {
             pt.save(pf, "petFile.txt");
