@@ -1,9 +1,13 @@
 package com.assignment2;
 
-import com.assignment1.*;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
+import java.io.Serializable;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 
-public class PetTable {
+public class PetTable implements java.io.Serializable {
 
     //array list for pet id, name, age
     private ArrayList<Integer> id = new ArrayList<>();
@@ -11,11 +15,35 @@ public class PetTable {
     private ArrayList<Integer> age = new ArrayList<>();
 
     //to print previous name and age
-    String previousName = new String();
-    int previousAge = 0;
+    private String previousName = new String();
+    private int previousAge = 0;
 
     //no-args default constructor
     public PetTable() {
+    }
+
+    public void setArrayId(ArrayList<Integer> id) {
+        this.id = id;
+    }
+
+    public ArrayList<Integer> getArrayId() {
+        return id;
+    }
+
+    public void setArrayName(ArrayList<String> name) {
+        this.name = name;
+    }
+
+    public ArrayList<String> getArrayName() {
+        return name;
+    }
+
+    public void setArrayAge(ArrayList<Integer> age) {
+        this.age = age;
+    }
+
+    public ArrayList<Integer> getArrayAge() {
+        return age;
     }
 
     //creates table and get info from array lists
@@ -53,73 +81,27 @@ public class PetTable {
         age.add(petAge);
     }
 
-    //search for name of pet in array list
-    public void nameSearch(String petName) {
-        int counter = 0;
-        String petNameCap = new String();
-        System.out.printf("\n+----------------------+\n");
-        System.out.printf("%-3s %-10s %4s", "ID", "NAME", "AGE\n");
-        System.out.println("+----------------------+");
-        
-        petNameCap = petName.substring(0, 1).toUpperCase();
-        petNameCap = petNameCap+petName.substring(1);
-
-        if (name.contains(petName)) {
-            for (int i = 0; i < id.size(); i++) {
-                if (name.get(i).equals(petName)) {
-                    System.out.printf("%-3s %-10s %4s", id.get(i), name.get(i), age.get(i) + "\n");
-                    counter++;
-                }
-            }
-            if (name.contains(petNameCap)) {
-            for (int i = 0; i < id.size(); i++) {
-                if (name.get(i).equals(petNameCap)) {
-                    System.out.printf("%-3s %-10s %4s", id.get(i), name.get(i), age.get(i) + "\n");
-                    counter++;
-                }
-            }
-        }
-        } else {
-            System.out.print("\n");
-        }
-
-        System.out.println("+----------------------+");
-        System.out.println(counter + " row(s) in set.\n");
-    }
-
-    //search age of pet in array list
-    public void ageSearch(int petAge) {
-        int counter = 0;
-        System.out.printf("\n+----------------------+\n");
-        System.out.printf("%-3s %-10s %4s", "ID", "NAME", "AGE\n");
-        System.out.println("+----------------------+");
-
-        if (age.contains(petAge)) {
-            for (int i = 0; i < id.size(); i++) {
-                if (age.get(i).equals(petAge)) {
-                    System.out.printf("%-3s %-10s %4s", id.get(i), name.get(i), age.get(i) + "\n");
-                    counter++;
-                }
-            }
-        } else {
-            System.out.print("\n");
-        }
-
-        System.out.println("+----------------------+");
-        System.out.println(counter + " row(s) in set.\n");
-    }
-
-    public void updatePet(int petId, String petName, int petAge) {
+    //delete pet by id
+    public void deletePet(int petId) {
         previousName = name.get(petId);
         previousAge = age.get(petId);
-        name.set(petId, petName);
-        age.set(petId, petAge);
-        System.out.println(previousName + " " + previousAge + " changed to " + name.get(petId) + " " + age.get(petId) + ".\n");
-    }
-
-    public void deletePet(int petId) {
         id.remove(petId);
         name.remove(petId);
         age.remove(petId);
+        System.out.println(previousName + " " + previousAge + " was removed.\n");
+    }
+
+    //saves a text file using the instances from PetFile class
+    public static void save(Serializable data, String fileName) throws Exception {
+        try (ObjectOutputStream output = new ObjectOutputStream(Files.newOutputStream(Paths.get(fileName)))) {
+            output.writeObject(data);
+        }
+    }
+
+    //loads existing text file
+    public static Object load(String fileName) throws Exception {
+        try (ObjectInputStream input = new ObjectInputStream(Files.newInputStream(Paths.get(fileName)))) {
+            return input.readObject();
+        }
     }
 }

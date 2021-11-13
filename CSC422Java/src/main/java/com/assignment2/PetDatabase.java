@@ -1,9 +1,8 @@
 //Kang Moua
 //CSC 422 Section 100
-//Assignment 1
+//Assignment 2
 package com.assignment2;
 
-import com.assignment1.*;
 import java.util.Scanner;
 
 public class PetDatabase {
@@ -21,23 +20,32 @@ public class PetDatabase {
         String[] inputArray = new String[1];
         //counter to display number of pets added
         int counter = 0;
-        //check if input is valid
+        //check if choice input is valid
         boolean number = false;
 
-        //initate pet table class
+        //initiate pet table class
         PetTable pt = new PetTable();
+        //initiate pet file
+        PetFile pf = new PetFile();
+
+        //loads into existing file if found
+        try {
+            pf = (PetFile) PetTable.load("petFile.txt");
+            pt.setArrayId(pf.id);
+            pt.setArrayName(pf.name);
+            pt.setArrayAge(pf.age);
+        } catch (Exception e) {
+            System.out.println("No file to load.\n");
+        }
 
         //greets user and display choices
         System.out.println("Pet Database Program.\n");
-        while (userChoice != 7) {
+        while (userChoice != 4) {
             System.out.println("What would you like to do?\n"
                     + "1) View all pets\n"
                     + "2) Add more pets\n"
-                    + "3) Update an existing pet\n"
-                    + "4) Remove an existing pet\n"
-                    + "5) Search pets by name\n"
-                    + "6) Search pets by age\n"
-                    + "7) Exit program\n"
+                    + "3) Remove an existing pet\n"
+                    + "4) Exit program\n"
                     + "Your choice:");
 
             //prompt user to enter choice
@@ -63,46 +71,28 @@ public class PetDatabase {
                     break;
                 case 2: //prompt user to add pet name and age
                     while (true) {
-                        try {
-                            System.out.println("add pet (name, age): ");
-                            petInput = input.nextLine();
-                            if (petInput == "done") {
-                                break;
-                            } else {
-                                for (int i = 0; i < 1; i++) {
-                                    inputArray = petInput.split(" ");
-                                }
+                        System.out.println("add pet (name, age): ");
+                        petInput = input.nextLine();
+                        if (petInput.equals("done")) {
+                            break;
+                        } else {
+                            for (int i = 0; i < 1; i++) {
+                                inputArray = petInput.split(" ");
+                            }
+                            try {
                                 pt.addPetAge(Integer.parseInt(inputArray[1]));
                                 pt.addPetName(inputArray[0]);
                                 pt.addPetId();
+                                counter++;
+                            } catch (Exception e) {
+                                System.out.println("");
                             }
-                        } catch (Exception e) {
-                            System.out.println("");
-                            break;
                         }
-                        counter++;
                     }
                     System.out.println(counter + " pets added.\n");
                     counter = 0;
                     break;
-                case 3: //update pet
-                    pt.table();
-                    try {
-                        System.out.println("Enter the pet ID to update: ");
-                        petIdInput = input.nextInt();
-                        System.out.println("Enter new name and new age: ");
-                        input.nextLine();
-                        petInput = input.nextLine();
-                        for (int i = 0; i < 1; i++) {
-                            inputArray = petInput.split(" ");
-                        }
-                        pt.updatePet(petIdInput, inputArray[0], Integer.parseInt(inputArray[1]));
-                    } catch (Exception e) {
-                        System.out.println("");
-                        break;
-                    }
-                    break;
-                case 4: //delete pet
+                case 3: //delete pet
                     pt.table();
                     try {
                         System.out.println("Enter the pet ID to remove: ");
@@ -113,33 +103,25 @@ public class PetDatabase {
                         break;
                     }
                     break;
-                case 5: //search by name
-                    try {
-                    System.out.println("Enter a name to search: ");
-                    petInput = input.nextLine();
-                    pt.nameSearch(petInput);
-                } catch (Exception e) {
-                    System.out.println("");
-                    break;
-                }
-                break;
-                case 6: //search by age
-                    try {
-                    System.out.println("Enter an age to search: ");
-                    petInput = input.nextLine();
-                    pt.ageSearch(Integer.parseInt(petInput));
-                } catch (Exception e) {
-                    System.out.println("");
-                    break;
-                }
-                break;
-                case 7: //ends program
+                case 4: //ends program
                     System.out.println("Goodbye!");
                     break;
                 default: //prompts user to re-enter choice
                     System.out.println("Please re-enter your choice.\n");
                     break;
             }
+        }
+        //sets current pet array lists to pet file
+        pf.id = pt.getArrayId();
+        pf.name = pt.getArrayName();
+        pf.age = pt.getArrayAge();
+
+        //saves array lists in text file
+        try {
+            pt.save(pf, "petFile.txt");
+            System.out.println("\nFile was saved.");
+        } catch (Exception e) {
+            System.out.println("\nCould not save file.");
         }
     }
 }
