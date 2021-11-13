@@ -81,6 +81,15 @@ public class PetTable implements java.io.Serializable {
         age.add(petAge);
     }
 
+    //tells user if list is full
+    public boolean limitCheck(boolean full) {
+        if (id.size() == 5) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
     //delete pet by id
     public void deletePet(int petId) {
         previousName = name.get(petId);
